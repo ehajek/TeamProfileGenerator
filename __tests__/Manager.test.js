@@ -1,3 +1,4 @@
+const { expect } = require('@jest/globals');
 const Manager = require('../lib/Manager.js');
 
 test('creates an Manager object', () => {
@@ -7,6 +8,7 @@ test('creates an Manager object', () => {
     expect(manager.id).toEqual(101);
     expect(manager.email).toEqual('jill@gmail.com');
     expect(manager.officeNum).toEqual('440-216-0000')
+    expect(manager.role).toEqual('Manager')
 
   //name
   //id
