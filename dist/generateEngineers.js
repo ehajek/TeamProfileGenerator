@@ -1,4 +1,4 @@
-const generateMembers = (data) => {
+const generateEngineers = (data) => {
     return `
         <div class="column is-multiline is-one-third">
             <div class="card" id="employeeMember">
@@ -20,7 +20,7 @@ const generateMembers = (data) => {
                         <div class="content">
                         <p class="box m-1 p-1">ID: ${data.id}</p><br>
                         <p class="box m-1 p-1">Email: <a href="mailto:${data.email}">${data.email}</a></p><br>
-                        <p class="box m-1 p-1">${data.specialInfo} ${data.specialData}</p>
+                        <p class="box m-1 p-1">${data.specialInfo} ${data.getGithub()}</p>
                         </div>
                     </div>
                 </div>  
@@ -29,4 +29,4 @@ const generateMembers = (data) => {
     `;
   };
 
-  module.exports = generateMembers;
+  module.exports = generateEngineers;

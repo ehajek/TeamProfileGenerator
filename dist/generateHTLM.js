@@ -13,7 +13,7 @@ function generateHTML () {
     <meta name="apple-mobile-web-app-status-bar-style" content="#FF0000">
     <title>Team Profile Generator</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"/>
-    <!-- <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/> -->
+    <script src="https://kit.fontawesome.com/27798e83c4.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./style.css">
   </head>
 

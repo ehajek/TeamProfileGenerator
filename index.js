@@ -7,6 +7,7 @@ const generateHTML = require('./dist/generateHTLM');
 const generateCSS = require('./dist/generateCSS');
 const generateFinishHTML = require('./dist/generateFinishHTML')
 const generateMembers = require('./dist/generateMembers');
+const generateEngineers = require('./dist/generateEngineers');
 
 
 //************
@@ -105,32 +106,26 @@ const managersQuestions = [
         }
      }
 ]
-
+//*************
+//Questions
 async function getNumber() {
     const getNumberFunc = 
     await inquirer.prompt(managersQuestions)
-    //.then(answer => {
- //       if (answer.membersPhone = true){
-    console.log(getNumberFunc.membersPhone)
+    //console.log(getNumberFunc.membersPhone)
     return getNumberFunc.membersPhone 
 }
-
 
 async function getSchool() {
     const getSchoolFunc = 
     await inquirer.prompt(internQuestions)
- //   .then(answer => {
-//        if (answer.membersSchool = true) {
-    console.log(getSchoolFunc.membersSchool)
+    //console.log(getSchoolFunc.membersSchool)
     return getSchoolFunc.membersSchool
     }
 
 async function getHubInfo() {
     const getHubFunction =
     await inquirer.prompt(engineerQuestions)
- //   .then(answer => {
- //       if (answer.membersGitHub = true) {
-     console.log(getHubFunction.membersGitHub)
+     //console.log(getHubFunction.membersGitHub)
             return getHubFunction.membersGitHub
     }
 
@@ -163,7 +158,7 @@ async function askQuestions() {
             await inquirer.prompt(membersQuestions)
             .then(async data => {
                 let engineer = new Engineer(data.membersName, data.membersId, data.membersEmail, (await getHubInfo()))
-                fs.appendFileSync('./index.html', generateMembers(engineer), err => {
+                fs.appendFileSync('./index.html', generateEngineers(engineer), err => {
                     if (err) {
                       reject(err);
                       return;
@@ -203,9 +198,9 @@ async function askQuestions() {
         });
     
 }
-
+//**************
+//Functions
 async function init() {
-    //Make file
     await fs.writeFileSync('./index.html', generateHTML(), err => {
         if (err) {
           reject(err);
@@ -227,7 +222,6 @@ async function init() {
     })
     console.log("Your HTML Page has been built!");
     console.log("The application has ended.");
-
 }
 
 init()
