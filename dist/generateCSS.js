@@ -1,9 +1,18 @@
-function generateHTML (data) {
+function generateCSS () {
     return `
+  
+    body {
+        margin: auto;
+    }
     #header {
         color: white;
-        background-color: rgb(209, 60, 92)
+        background-color: red;
       }
+    .hero {
+        background-color: red;
+      }
+    
+
     `;
 };
 

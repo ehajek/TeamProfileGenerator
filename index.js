@@ -1,14 +1,25 @@
-//import PhoneInput from 'react-phone-number-input/input'
 const inquirer = require("inquirer")
 const Employee = require('./lib/Employee');
 const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 const fs = require('fs');
-const generateHTMLCSS = require('./dist/generateHTLMCSS');
+const generateHTML = require('./dist/generateHTLM');
+const generateCSS = require('./dist/generateCSS');
+const { property } = require("lodash");
 
+const members = []
 
 //************
+const startQuestions = [
+    {
+        type: 'list',
+        name: 'membersRole',
+        message: 'Please select Employee\'s Role: (Required)',
+        choices: ['Manager', 'Engineer', 'Intern'],
+        default: 'Engineer'
+    }
+]
 const membersQuestions = [
     {
         type: 'input',
@@ -49,13 +60,6 @@ const membersQuestions = [
             }
         }
     },
-    {
-        type: 'list',
-        name: 'membersRole',
-        message: 'Please select Employee\'s Role: (Required)',
-        choices: ['Manger', 'Engineer', 'Intern'],
-        default: 'Engineer'
-    }
 ]
 const engineerQuestions = [
     {
@@ -103,38 +107,80 @@ const managersQuestions = [
      }
 ]
 
+// function askQuestions() {
+//     await inquirer.prompt(membersQuestions)
+//     .then(response => {
+//         if (response.membersRole === 'Manger') {
+//            //console.log(response.membersRole);
+//            new Manager(response.membersName, response.membersId, response.membersEmail, {
+//                inquirer
+//                .prompt(managersQuestions).then(roleResponse => {
+//                 return roleResponse.membersPhone;
+//                })}
+//            )
+//         }if (response.membersRole === 'Engineer'){
+//            //console.log(response.membersRole);
+//             inquirer.prompt(engineerQuestions)
+//             .then(roleResponse => {
+//                 console.log(roleResponse.membersGitHub);
+//             })
+//         }if (response.membersRole === 'Intern'){
+//             //console.log(response.membersRole);
+//             inquirer.prompt(internQuestions)
+//             .then(roleResponse => {
+//                 console.log(roleResponse.membersSchool);
+//             })
+//         }
+//     });
+    
+// };
+
+// function getNumber() {
+//     inquirer.prompt(managersQuestions)
+//     .then(answer => {
+//         console.log(answer.membersPhone)
+//         return answer.membersPhone 
+//     })
+// };
+
+// function getNumber() {
+//     inquirer.prompt(managersQuestions)
+//     .then(answer => {
+//         console.log(answer.membersPhone)
+//         return answer.membersPhone 
+//     })
+// };
+
 function init() {
-    inquirer.prompt(membersQuestions)
-    .then(response => {
-        if (response.membersRole === 'Manger') {
-            console.log(response.membersRole);
-            inquirer.prompt(managersQuestions);
-        }if (response.membersRole === 'Engineer'){
-            console.log(response.membersRole);
-            inquirer.prompt(engineerQuestions);
-        }if (response.membersRole === 'Intern'){
-            console.log(response.membersRole);
-            inquirer.prompt(internQuestions);
+    //Make file
+     fs.writeFileSync('./index.html', generateHTML(), err => {
+        if (err) {
+          reject(err);
+          return;
         }
     });
-    
-};
+    //ask Type of Role
+    inquirer.prompt(startQuestions)
+    .then(response => {
+        console.log(response.membersRole);
+        if (response.membersRole === 'Manager') {
+            inquirer.prompt(membersQuestions)
+            .then(data => {
+                let manager = new Manager(data.membersName, data.membersId, data.membersEmail, Manager.getOfficeNum)
+            })
+        // } if (response.membersRole === 'Intern') {
+        //     inquirer.prompt(membersQuestions)
+        //     .then(data => {
+        //         let manager = new Intern(data.membersName, data.membersId, data.membersEmail, getSchool())
+        //         console.log(manager.role);
+        //     })
+        // }
+
+
+        } else {
+            console.log("test");
+        }
+    })
+}
 
 init()
-
-// *******
-
-// function Example() {
-//     // `value` will be the parsed phone number in E.164 format.
-//     // Example: "+12133734253".
-//     const [value, setValue] = useState()
-//     // If `country` property is not passed
-//     // then "International" format is used.
-//     // Otherwise, "National" format is used.
-//     return (
-//       <PhoneInput
-//         country="US"
-//         value={value}
-//         onChange={setValue} />
-//     )
-//   }
