@@ -135,21 +135,26 @@ const managersQuestions = [
     
 // };
 
-// function getNumber() {
-//     inquirer.prompt(managersQuestions)
-//     .then(answer => {
-//         console.log(answer.membersPhone)
-//         return answer.membersPhone 
-//     })
-// };
+function getNumber() {
+    inquirer.prompt(managersQuestions)
+    .then(answer => {
+        return answer.membersPhone 
+    })
+};
 
-// function getNumber() {
-//     inquirer.prompt(managersQuestions)
-//     .then(answer => {
-//         console.log(answer.membersPhone)
-//         return answer.membersPhone 
-//     })
-// };
+function getSchool() {
+    inquirer.prompt(internQuestions)
+    .then(answer => {
+        return answer.membersPhone 
+    })
+};
+
+function getHubInfo() {
+    inquirer.prompt(engineerQuestions)
+    .then(answer => {
+        return answer.membersPhone 
+    })
+};
 
 function init() {
     //Make file
@@ -162,23 +167,23 @@ function init() {
     //ask Type of Role
     inquirer.prompt(startQuestions)
     .then(response => {
-        console.log(response.membersRole);
         if (response.membersRole === 'Manager') {
             inquirer.prompt(membersQuestions)
             .then(data => {
-                let manager = new Manager(data.membersName, data.membersId, data.membersEmail, Manager.getOfficeNum)
+                let manager = new Manager(data.membersName, data.membersId, data.membersEmail, getNumber())
             })
-        // } if (response.membersRole === 'Intern') {
-        //     inquirer.prompt(membersQuestions)
-        //     .then(data => {
-        //         let manager = new Intern(data.membersName, data.membersId, data.membersEmail, getSchool())
-        //         console.log(manager.role);
-        //     })
-        // }
-
-
+        } else if (response.membersRole === 'Intern') {
+            inquirer.prompt(membersQuestions)
+            .then(data => {
+                let intern = new Intern(data.membersName, data.membersId, data.membersEmail, getSchool())
+            })
+        } else if (response.membersRole === 'Engineer') {
+            inquirer.prompt(membersQuestions)
+            .then(data => {
+                let engineer = new Engineer(data.membersName, data.membersId, data.membersEmail, getHubInfo())
+            })
         } else {
-            console.log("test");
+            console.log("Something is not right");
         }
     })
 }
