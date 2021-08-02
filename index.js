@@ -7,8 +7,10 @@ const fs = require('fs');
 const generateHTML = require('./dist/generateHTLM');
 const generateCSS = require('./dist/generateCSS');
 const { property } = require("lodash");
+const generateFinishHTML = require('./dist/generateFinishHTML')
+const generateMembers = require('./dist/generateMembers');
+const { assertNewExpression } = require("@babel/types");
 
-const members = []
 
 //************
 const startQuestions = [
@@ -17,7 +19,7 @@ const startQuestions = [
         name: 'membersRole',
         message: 'Please select Employee\'s Role: (Required)',
         choices: ['Manager', 'Engineer', 'Intern'],
-        default: 'Engineer'
+        default: 'Manager'
     }
 ]
 const membersQuestions = [
@@ -25,9 +27,9 @@ const membersQuestions = [
         type: 'input',
         name: 'membersName',
         message: 'What is the Employee\'s Name? - (Required)',
-        validate: titleInput => {
-            if (titleInput) {
-                return true;
+        validate: descriptionInput => {
+            if (descriptionInput) {
+                return true
             } else {
                 console.log('Please enter the Employee\'s Name!');
                 return false;
@@ -40,7 +42,7 @@ const membersQuestions = [
         message: 'What is the Employee\'s ID? - (Required)',
         validate: descriptionInput => {
             if (descriptionInput) {
-                return true;
+                return true
             } else {
                 console.log('Please enter the Employee\'s ID!');
                 return false;
@@ -51,9 +53,9 @@ const membersQuestions = [
         type: 'input',
         name: 'membersEmail',
         message: 'Enter the Employee\'s email address? - (Required)',
-        validate: instalationInput => {
-            if (instalationInput) {
-                return true;
+        validate: descriptionInput => {
+            if (descriptionInput) {
+                return true
             } else {
                 console.log('Please enter the Employee\'s email address!');
                 return false;
@@ -68,7 +70,7 @@ const engineerQuestions = [
         message: 'What is the Engineer\'s gitHub account name? (Required)',
         validate: titleInput => {
             if (titleInput) {
-                return true;
+                return true
             } else {
                 console.log('Please enter the Employee\'s gitHub account name!');
                 return false;
@@ -81,9 +83,9 @@ const internQuestions = [
         type: 'input',
         name: 'membersSchool',
         message: 'What is the Intern\'s school name? (Required)',
-        validate: titleInput => {
-            if (titleInput) {
-                return true;
+        validate: descriptionInput => {
+            if (descriptionInput) {
+                return true
             } else {
                 console.log('Please enter the Intern\'s school name!');
                 return false;
@@ -95,10 +97,10 @@ const managersQuestions = [
     {
         type: 'input',
         name: 'membersPhone',
-        message: 'What is the Manager\'s phone number? (Required)',
-        validate: titleInput => {
-            if (titleInput) {
-                return true;
+        message: 'What is the Manager\'s phone number? - (Required)',
+        validate: descriptionInput => {
+            if (descriptionInput) {
+                return true
             } else {
                 console.log('Please enter the Manager\'s phone number!');
                 return false;
@@ -107,85 +109,144 @@ const managersQuestions = [
      }
 ]
 
-// function askQuestions() {
-//     await inquirer.prompt(membersQuestions)
-//     .then(response => {
-//         if (response.membersRole === 'Manger') {
-//            //console.log(response.membersRole);
-//            new Manager(response.membersName, response.membersId, response.membersEmail, {
-//                inquirer
-//                .prompt(managersQuestions).then(roleResponse => {
-//                 return roleResponse.membersPhone;
-//                })}
-//            )
-//         }if (response.membersRole === 'Engineer'){
-//            //console.log(response.membersRole);
-//             inquirer.prompt(engineerQuestions)
-//             .then(roleResponse => {
-//                 console.log(roleResponse.membersGitHub);
-//             })
-//         }if (response.membersRole === 'Intern'){
-//             //console.log(response.membersRole);
-//             inquirer.prompt(internQuestions)
-//             .then(roleResponse => {
-//                 console.log(roleResponse.membersSchool);
-//             })
-//         }
-//     });
-    
-// };
-
-function getNumber() {
+ function getNumber() {
     inquirer.prompt(managersQuestions)
     .then(answer => {
+ //       if (answer.membersPhone = true){
+        console.log(answer.membersPhone)
         return answer.membersPhone 
-    })
-};
+        })
+}
 
-function getSchool() {
-    inquirer.prompt(internQuestions)
+async function getSchool() {
+    await inquirer.prompt(internQuestions)
     .then(answer => {
-        return answer.membersPhone 
-    })
-};
+//        if (answer.membersSchool = true) {
+            return answer.membersSchool
+        })
+    }
 
-function getHubInfo() {
-    inquirer.prompt(engineerQuestions)
+async function getHubInfo() {
+    await inquirer.prompt(engineerQuestions)
     .then(answer => {
-        return answer.membersPhone 
-    })
-};
+ //       if (answer.membersGitHub = true) {
+            return answer.membersGitHub
+        })
+    }
 
-function init() {
+async function askQuestions() {
+   await inquirer.prompt(await startQuestions)
+    .then(async response => {
+        if (response.membersRole === 'Manager') {
+            await inquirer.prompt(membersQuestions)
+            .then(async data => {
+                let manager = new Manager(data.membersName, data.membersId, data.membersEmail, await getNumber())
+                fs.appendFileSync('./index.html', generateMembers(manager), err => {
+                    if (err) {
+                      reject(err);
+                      return;
+                    }
+                })
+            });
+        } else if (response.membersRole === 'Intern') {
+            await inquirer.prompt(membersQuestions)
+            .then(async data => {
+                let intern = new Intern(data.membersName, data.membersId, data.membersEmail, (await getSchool()))
+                fs.appendFileSync('./index.html', generateMembers(intern), err => {
+                    if (err) {
+                      reject(err);
+                      return;
+                    }
+                })
+            });
+        } else if (response.membersRole === 'Engineer') {
+            await inquirer.prompt(membersQuestions)
+            .then(async data => {
+                let engineer = new Engineer(data.membersName, data.membersId, data.membersEmail, (await getHubInfo()))
+                fs.appendFileSync('./index.html', generateMembers(engineer), err => {
+                    if (err) {
+                      reject(err);
+                      return;
+                    }
+                })
+            });
+        } else {
+            console.log("Something is not right");
+        };
+
+    })
+    await inquirer.prompt([
+        {
+            type: 'list',
+            name: 'AddMore',
+            message: 'Would you like to add more Employees - (Required)',
+            choices: ['Yes', 'No'],
+            default: 'No',
+            validate: descriptionInput => {
+                if (descriptionInput) {
+                    return true
+                } else {
+                    console.log('Please select if you are adding more Employees!');
+                    return false;
+                }
+            }
+
+        }
+    ])
+    .then(async answer => {
+        if (answer.AddMore === 'Yes') {
+            await askQuestions()
+        } else {
+            return console.log("No more Employees to add.");
+        }
+
+        });
+    
+}
+
+async function init() {
     //Make file
-     fs.writeFileSync('./index.html', generateHTML(), err => {
+    await fs.writeFileSync('./index.html', generateHTML(), err => {
         if (err) {
           reject(err);
           return;
         }
     });
-    //ask Type of Role
-    inquirer.prompt(startQuestions)
-    .then(response => {
-        if (response.membersRole === 'Manager') {
-            inquirer.prompt(membersQuestions)
-            .then(data => {
-                let manager = new Manager(data.membersName, data.membersId, data.membersEmail, getNumber())
-            })
-        } else if (response.membersRole === 'Intern') {
-            inquirer.prompt(membersQuestions)
-            .then(data => {
-                let intern = new Intern(data.membersName, data.membersId, data.membersEmail, getSchool())
-            })
-        } else if (response.membersRole === 'Engineer') {
-            inquirer.prompt(membersQuestions)
-            .then(data => {
-                let engineer = new Engineer(data.membersName, data.membersId, data.membersEmail, getHubInfo())
-            })
-        } else {
-            console.log("Something is not right");
+    await fs.writeFileSync('./style.css', generateCSS(), err => {
+        if (err) {
+          reject(err);
+          return;
         }
-    })
+    });
+    await askQuestions()
+    // await inquirer.prompt([
+    //     {
+    //         type: 'list',
+    //         name: 'AddMore',
+    //         message: 'Would you like to add more Employees - (Required)',
+    //         choices: ['Yes', 'No'],
+    //         default: 'No',
+    //         validate: descriptionInput => {
+    //             if (descriptionInput) {
+    //                 return true
+    //             } else {
+    //                 console.log('Please select if you are adding more Employees!');
+    //                 return false;
+    //             }
+    //         }
+
+    //     }
+    // ])
+    // .then(async answer => {
+    //     if (answer.AddMore === 'Yes') {
+    //         await askQuestions()
+    //     } 
+    //     console.log("Your HTML Page has been built!");
+    //     console.log("The application has ended.")
+    //     });
+    console.log("Your HTML Page has been built!");
+    console.log("The application has ended.")
+
 }
 
 init()
