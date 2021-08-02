@@ -1,15 +1,12 @@
 const inquirer = require("inquirer")
-const Employee = require('./lib/Employee');
 const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 const fs = require('fs');
 const generateHTML = require('./dist/generateHTLM');
 const generateCSS = require('./dist/generateCSS');
-const { property } = require("lodash");
 const generateFinishHTML = require('./dist/generateFinishHTML')
 const generateMembers = require('./dist/generateMembers');
-const { assertNewExpression } = require("@babel/types");
 
 
 //************
@@ -109,29 +106,32 @@ const managersQuestions = [
      }
 ]
 
- function getNumber() {
-    inquirer.prompt(managersQuestions)
-    .then(answer => {
+async function getNumber() {
+    const getNumberFunc = 
+    await inquirer.prompt(managersQuestions)
+    //.then(answer => {
  //       if (answer.membersPhone = true){
-        console.log(answer.membersPhone)
-        return answer.membersPhone 
-        })
+    console.log(getNumberFunc.membersPhone)
+    return getNumberFunc.membersPhone 
 }
 
+
 async function getSchool() {
+    const getSchoolFunc = 
     await inquirer.prompt(internQuestions)
-    .then(answer => {
+ //   .then(answer => {
 //        if (answer.membersSchool = true) {
-            return answer.membersSchool
-        })
+    console.log(getSchoolFunc.membersSchool)
+    return getSchoolFunc.membersSchool
     }
 
 async function getHubInfo() {
+    const getHubFunction =
     await inquirer.prompt(engineerQuestions)
-    .then(answer => {
+ //   .then(answer => {
  //       if (answer.membersGitHub = true) {
-            return answer.membersGitHub
-        })
+     console.log(getHubFunction.membersGitHub)
+            return getHubFunction.membersGitHub
     }
 
 async function askQuestions() {
@@ -218,34 +218,15 @@ async function init() {
           return;
         }
     });
-    await askQuestions()
-    // await inquirer.prompt([
-    //     {
-    //         type: 'list',
-    //         name: 'AddMore',
-    //         message: 'Would you like to add more Employees - (Required)',
-    //         choices: ['Yes', 'No'],
-    //         default: 'No',
-    //         validate: descriptionInput => {
-    //             if (descriptionInput) {
-    //                 return true
-    //             } else {
-    //                 console.log('Please select if you are adding more Employees!');
-    //                 return false;
-    //             }
-    //         }
-
-    //     }
-    // ])
-    // .then(async answer => {
-    //     if (answer.AddMore === 'Yes') {
-    //         await askQuestions()
-    //     } 
-    //     console.log("Your HTML Page has been built!");
-    //     console.log("The application has ended.")
-    //     });
+    await askQuestions();
+    fs.appendFileSync('./index.html', generateFinishHTML(), err => {
+        if (err) {
+          reject(err);
+          return;
+        }
+    })
     console.log("Your HTML Page has been built!");
-    console.log("The application has ended.")
+    console.log("The application has ended.");
 
 }
 

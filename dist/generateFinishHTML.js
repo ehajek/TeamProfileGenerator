@@ -4,8 +4,6 @@ function generateFinishHTML() {
         </section>
     </div>
       <!-- <main class="container my-5">
-        ${generateAbout(about)}
-        ${generateProjects(projects)}
       -->
     </body>
     </html>
