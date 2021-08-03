@@ -23,7 +23,7 @@ THEN I exit the application, and the HTML is generated
 
 ## Video Link
 
-*The video link for TeamProfileGenerator's workflow is located at ""
+*The video link for TeamProfileGenerator's workflow is located at "https://drive.google.com/file/d/1-SzTN-GVFaoqRF7j5AHVvFsyUMmAyRzj/view"
 
 ## GitHub Repository 
 
